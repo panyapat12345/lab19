@@ -20,22 +20,58 @@ string toUpperStr(string x){
     return y;
 }
 
-void importDataFromFile(){
+void importDataFromFile(string filename, vector<string> &names, vector<int> &scores, vector<char> &grades){
+    ifstream fin(filename);
+    string s;
+    char n[20];
+    int a, b, c;
+    while(getline(fin, s)){
+        sscanf(s.c_str(), "%[^:]: %d %d %d", n, &a, &b, &c);
+        names.push_back(n);
+        scores.push_back(a+b+c);
+        grades.push_back(score2grade(a+b+c));
+    }
+}
+
+void getCommand(string &command, string &key){      // "name Monkey D. Luffy" 
+    string s;                                       // "%s %[^\n]" 
+    char t1[10], t2[20];
+    cout << "Please input your command: ";
+    getline(cin, s);
+    sscanf(s.c_str(), "%s %[^\n]}", t1, t2);
+    command = t1;
+    key = t2;
 
 }
 
-void getCommand(){
+void searchName(vector<string> names, vector<int> scores, vector<char> grades, string key){
+    bool status = false;
+    cout << "---------------------------------" << endl;
+    for(unsigned int i = 0; i < names.size(); i++){
+        if(toUpperStr(names[i]) == key){
+            cout << names[i] << "'s score = " << scores[i] << endl;
+            cout << names[i] << "'s grade = " << grades[i] << endl;
+            status = true;
+        }
+    }
 
+    if(status == false) cout << "Cannot found." << endl;
+    cout << "---------------------------------" << endl;
 }
 
-void searchName(){
-
+void searchGrade(vector<string> names, vector<int> scores, vector<char> grades, string key){
+    bool status = false;
+    cout << "---------------------------------" << endl;
+    for(unsigned int i = 0; i < names.size(); i++){
+        if(grades[i] == key[0]){
+            cout << names[i] << " (" << scores[i] << ")" << endl;
+            status = true;
+        }
+    }
+    
+    if(status == false) cout << "Cannot found." << endl;
+    cout << "---------------------------------" << endl;
 }
-
-void searchGrade(){
-
-}
-
 
 int main(){
     string filename = "name_score.txt";
@@ -60,4 +96,3 @@ int main(){
     }while(true);
     
     return 0;
-}
